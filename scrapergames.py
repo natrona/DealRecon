@@ -19,7 +19,7 @@ def animacao_inicio():
     for i in range(4):
         sys.stdout.write("\r" + centralizar(texto + "." * i))
         sys.stdout.flush()
-        time.sleep(0.5)
+        time.sleep(0.4)
     print("\n" + centralizar("Bem-vindo ao DealRecon!\n"))
 
 def coletar_ofertas_steam():
@@ -94,7 +94,7 @@ def menu():
             epic = coletar_epic_games()
             gerar_txt(steam, epic)
         elif op == "4":
-            print(centralizar("Até logo!"))
+            print(centralizar("Até logo!\n"))
             break
         else:
             print(centralizar("Opção inválida!"))
