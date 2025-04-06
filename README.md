@@ -1,18 +1,16 @@
-# DealRecon - Scraper de Ofertas de Games 🎮🔥  
+# DealRecon - Scraper de Ofertas de Games   
 **por [Ruše] | GitHub: [Natrona](https://github.com/Natrona)**  
 
-![Steam Banner](https://i.imgur.com/RFjzSxg.png)  
-![Epic Games Banner](https://i.imgur.com/f3SbhKx.png)  
-![GOG Banner](https://i.imgur.com/Z7UUbGK.png)
+![Banner](https://i.imgur.com/RFjzSxg.png)
 
 ---
 
 ## ✨ Sobre o Projeto
 **DealRecon** é um script simples que coleta promoções quentes de jogos nas principais lojas digitais:
 
-- Steam
-- Epic Games
-- GOG
+- Steam  
+- Epic Games  
+- GOG  
 
 Ideal para gamers que querem economizar!
 
