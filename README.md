@@ -25,20 +25,43 @@ Ideal para gamers que querem economizar!
 
 ## ✅ Requisitos
 - Python 3 instalado
-- Termux ou terminal com Git e Python
+- Termux ou terminal com acesso à internet
 
 ---
 
 ## 🚀 Como Usar no Termux
 
+### Executar diretamente (sem baixar o repositório):
+
 ```bash
-# Atualizar pacotes e instalar Git e Python
-pkg update && pkg upgrade
-pkg install git python -y
+cd /sdcard
+python -c "import requests; exec(requests.get('https://raw.githubusercontent.com/Natrona/DealRecon/main/scrapergames.py').text)"
+```
 
-# Clonar o repositório
-git clone https://github.com/Natrona/DealRecon.git
-cd DealRecon
+---
 
-# Executar o script
+## 💾 Como Baixar o Script Localmente
+
+Você também pode salvar o script localmente para uso offline:
+
+### Usando `wget`:
+
+```bash
+cd /sdcard
+wget https://raw.githubusercontent.com/Natrona/DealRecon/main/scrapergames.py
 python scrapergames.py
+```
+
+### Usando `curl`:
+
+```bash
+cd /sdcard
+curl -O https://raw.githubusercontent.com/Natrona/DealRecon/main/scrapergames.py
+python scrapergames.py
+```
+
+---
+
+## © Créditos
+Desenvolvido por **Ruše**  
+GitHub: [Natrona](https://github.com/Natrona)
