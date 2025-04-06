@@ -29,9 +29,9 @@ Ideal para gamers que querem economizar!
 
 ---
 
-## 🚀 Como Usar no Termux
+## 🚀 Como Usar
 
-### Executar diretamente (sem baixar o repositório):
+### 1. Executar diretamente (sem baixar nada):
 
 ```bash
 cd /sdcard
@@ -40,11 +40,9 @@ python -c "import requests; exec(requests.get('https://raw.githubusercontent.com
 
 ---
 
-## 💾 Como Baixar o Script Localmente
+### 2. Baixar o script individualmente (uso offline)
 
-Você também pode salvar o script localmente para uso offline:
-
-### Usando `wget`:
+#### Usando `wget`:
 
 ```bash
 cd /sdcard
@@ -52,11 +50,29 @@ wget https://raw.githubusercontent.com/Natrona/DealRecon/main/scrapergames.py
 python scrapergames.py
 ```
 
-### Usando `curl`:
+#### Usando `curl`:
 
 ```bash
 cd /sdcard
 curl -O https://raw.githubusercontent.com/Natrona/DealRecon/main/scrapergames.py
+python scrapergames.py
+```
+
+---
+
+### 3. Clonar o repositório completo
+
+```bash
+# Atualizar pacotes e instalar Git e Python (no Termux)
+pkg update && pkg upgrade
+pkg install git python -y
+
+# Clonar o repositório
+cd /sdcard
+git clone https://github.com/Natrona/DealRecon.git
+cd DealRecon
+
+# Executar o script
 python scrapergames.py
 ```
 
