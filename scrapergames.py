@@ -3,108 +3,102 @@
 
 import requests
 import json
+import time
+import sys
 from datetime import datetime
-from colorama import Fore, Style, init
-from reportlab.pdfgen import canvas
-from textwrap import fill
 
-init(autoreset=True)
+def centralizar(texto, largura=60):
+    return texto.center(largura)
 
 def titulo(texto):
-    return Fore.CYAN + Style.BRIGHT + texto.center(60)
+    print("\n" + centralizar(texto))
+    print(centralizar("-" * len(texto)) + "\n")
+
+def animacao_inicio():
+    texto = "Carregando DealRecon"
+    for i in range(4):
+        sys.stdout.write("\r" + centralizar(texto + "." * i))
+        sys.stdout.flush()
+        time.sleep(0.5)
+    print("\n" + centralizar("Bem-vindo ao DealRecon!\n"))
 
 def coletar_ofertas_steam():
-    print(titulo("OFERTAS DA STEAM"))
+    titulo("OFERTAS DA STEAM")
     try:
-        response = requests.get("https://steamspy.com/api.php?request=top100in2weeks")
-        jogos = response.json()
+        r = requests.get("https://steamspy.com/api.php?request=top100in2weeks")
+        data = r.json()
         ofertas = []
-        for jogo in jogos.values():
-            if int(jogo['initialprice']) > int(jogo['price']):
-                nome = jogo['name']
-                preco_original = int(jogo['initialprice']) / 100
-                preco_atual = int(jogo['price']) / 100
-                desconto = 100 - int((preco_atual / preco_original) * 100)
-                ofertas.append(f"{nome} - R${preco_original:.2f} → R${preco_atual:.2f} ({desconto:.0f}% OFF)")
-        return ofertas[:10]
+        for jogo in data.values():
+            p_original = int(jogo["initialprice"])
+            p_atual = int(jogo["price"])
+            if p_original > p_atual:
+                nome = jogo["name"]
+                preco_o = p_original / 100
+                preco_n = p_atual / 100
+                desc = 100 - int((preco_n / preco_o) * 100)
+                ofertas.append(f"{nome} - R${preco_o:.2f} → R${preco_n:.2f} ({desc}% OFF)")
+        if not ofertas:
+            print(centralizar("Nenhuma oferta encontrada."))
+        else:
+            for o in ofertas[:10]: print(centralizar(o))
+        return ofertas
     except Exception as e:
-        return [f"Erro ao acessar SteamSpy: {e}"]
+        print(centralizar(f"Erro ao acessar SteamSpy: {e}"))
+        return []
 
 def coletar_epic_games():
-    print(titulo("JOGOS GRÁTIS NA EPIC GAMES"))
+    titulo("GRÁTIS NA EPIC GAMES")
     try:
-        response = requests.get("https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?locale=pt-BR")
-        data = response.json()
-        jogos = data['data']['Catalog']['searchStore']['elements']
+        r = requests.get("https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?locale=pt-BR")
+        data = r.json()
+        jogos = data["data"]["Catalog"]["searchStore"]["elements"]
         gratis = []
-        for jogo in jogos:
-            if jogo['price']['totalPrice']['discountPrice'] == 0:
-                gratis.append(jogo['title'] + " - GRÁTIS")
-        return gratis if gratis else ["Nenhum jogo grátis no momento."]
+        for j in jogos:
+            if j["price"]["totalPrice"]["discountPrice"] == 0:
+                gratis.append(j["title"] + " - GRÁTIS")
+        if not gratis:
+            print(centralizar("Nenhum jogo grátis no momento."))
+        else:
+            for g in gratis: print(centralizar(g))
+        return gratis
     except Exception as e:
-        return [f"Erro ao acessar Epic Games: {e}"]
+        print(centralizar(f"Erro ao acessar Epic: {e}"))
+        return []
 
 def gerar_txt(steam, epic):
     nome = f"ofertas_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
-    with open(nome, "w", encoding="utf-8") as f:
-        f.write("OFERTAS DA STEAM\n")
-        f.write("\n".join(steam) + "\n\n")
-        f.write("JOGOS GRÁTIS NA EPIC GAMES\n")
-        f.write("\n".join(epic) + "\n\n")
-        f.write("GOG PROMOÇÕES\n")
-        f.write("https://www.gog.com/games?price=discounted&sort=popularity\n")
-    print(Fore.GREEN + f"Arquivo TXT salvo como: {nome}")
-
-def gerar_pdf(steam, epic):
-    nome = f"ofertas_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-    c = canvas.Canvas(nome)
-    c.setFont("Helvetica", 12)
-    y = 800
-    c.drawString(200, y, "OFERTAS DE JOGOS")
-    y -= 30
-
-    c.drawString(50, y, "Steam:")
-    y -= 20
-    for item in steam:
-        c.drawString(60, y, item)
-        y -= 15
-
-    y -= 15
-    c.drawString(50, y, "Epic Games:")
-    y -= 20
-    for item in epic:
-        c.drawString(60, y, item)
-        y -= 15
-
-    y -= 15
-    c.drawString(50, y, "GOG Promoções: https://www.gog.com/games?price=discounted&sort=popularity")
-    c.save()
-    print(Fore.GREEN + f"Arquivo PDF salvo como: {nome}")
+    with open(nome, "w", encoding="utf-8") as arq:
+        arq.write("OFERTAS DA STEAM\n")
+        arq.write("\n".join(steam) + "\n\n")
+        arq.write("GRÁTIS NA EPIC GAMES\n")
+        arq.write("\n".join(epic) + "\n\n")
+        arq.write("GOG PROMOÇÕES\n")
+        arq.write("https://www.gog.com/games?price=discounted&sort=popularity\n")
+    print(centralizar(f"Arquivo salvo: {nome}"))
 
 def menu():
     while True:
-        print(titulo("MENU DEALRECON"))
-        print("1 - Ver ofertas da Steam")
-        print("2 - Ver jogos grátis da Epic")
-        print("3 - Salvar ofertas em TXT")
-        print("4 - Salvar ofertas em PDF")
-        print("5 - Sair")
-        op = input(Fore.YELLOW + "\nEscolha uma opção: ")
+        titulo("MENU DEALRECON")
+        print(centralizar("1 - Ver ofertas da Steam"))
+        print(centralizar("2 - Ver grátis na Epic"))
+        print(centralizar("3 - Gerar arquivo .txt"))
+        print(centralizar("4 - Sair"))
+        op = input("\nEscolha uma opção: ")
+
         if op == "1":
-            ofertas = coletar_ofertas_steam()
-            for o in ofertas: print(Fore.WHITE + o)
+            coletar_ofertas_steam()
         elif op == "2":
-            ofertas = coletar_epic_games()
-            for o in ofertas: print(Fore.WHITE + o)
+            coletar_epic_games()
         elif op == "3":
-            gerar_txt(coletar_ofertas_steam(), coletar_epic_games())
+            steam = coletar_ofertas_steam()
+            epic = coletar_epic_games()
+            gerar_txt(steam, epic)
         elif op == "4":
-            gerar_pdf(coletar_ofertas_steam(), coletar_epic_games())
-        elif op == "5":
-            print(Fore.CYAN + "Até logo!")
+            print(centralizar("Até logo!"))
             break
         else:
-            print(Fore.RED + "Opção inválida!")
+            print(centralizar("Opção inválida!"))
 
 if __name__ == "__main__":
+    animacao_inicio()
     menu()
