@@ -7,20 +7,19 @@ import time
 import sys
 from datetime import datetime
 
-def centralizar(texto, largura=60):
+def espacamento(texto, largura=60):
     return texto.center(largura)
 
 def titulo(texto):
-    print("\n" + centralizar(texto))
-    print(centralizar("-" * len(texto)) + "\n")
+    print("\n" + espacamento(f"[ {texto} ]") + "\n")
 
 def animacao_inicio():
     texto = "Carregando DealRecon"
     for i in range(4):
-        sys.stdout.write("\r" + centralizar(texto + "." * i))
+        sys.stdout.write("\r" + espacamento(texto + "." * i))
         sys.stdout.flush()
         time.sleep(0.4)
-    print("\n" + centralizar("Bem-vindo ao DealRecon!\n"))
+    print("\n" + espacamento("Bem-vindo ao DealRecon") + "\n")
 
 def coletar_ofertas_steam():
     titulo("OFERTAS DA STEAM")
@@ -36,14 +35,14 @@ def coletar_ofertas_steam():
                 preco_o = p_original / 100
                 preco_n = p_atual / 100
                 desc = 100 - int((preco_n / preco_o) * 100)
-                ofertas.append(f"{nome} - R${preco_o:.2f} → R${preco_n:.2f} ({desc}% OFF)")
+                ofertas.append(f"- {nome}\n  De: R${preco_o:.2f} | Por: R${preco_n:.2f} ({desc}% OFF)")
         if not ofertas:
-            print(centralizar("Nenhuma oferta encontrada."))
+            print(espacamento("Nenhuma oferta encontrada."))
         else:
-            for o in ofertas[:10]: print(centralizar(o))
+            for o in ofertas[:10]: print(espacamento(o))
         return ofertas
     except Exception as e:
-        print(centralizar(f"Erro ao acessar SteamSpy: {e}"))
+        print(espacamento(f"Erro ao acessar SteamSpy: {e}"))
         return []
 
 def coletar_epic_games():
@@ -55,34 +54,34 @@ def coletar_epic_games():
         gratis = []
         for j in jogos:
             if j["price"]["totalPrice"]["discountPrice"] == 0:
-                gratis.append(j["title"] + " - GRÁTIS")
+                gratis.append(f"- {j['title']} (GRÁTIS)")
         if not gratis:
-            print(centralizar("Nenhum jogo grátis no momento."))
+            print(espacamento("Nenhum jogo grátis no momento."))
         else:
-            for g in gratis: print(centralizar(g))
+            for g in gratis: print(espacamento(g))
         return gratis
     except Exception as e:
-        print(centralizar(f"Erro ao acessar Epic: {e}"))
+        print(espacamento(f"Erro ao acessar Epic: {e}"))
         return []
 
 def gerar_txt(steam, epic):
     nome = f"ofertas_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     with open(nome, "w", encoding="utf-8") as arq:
-        arq.write("OFERTAS DA STEAM\n")
+        arq.write("[ OFERTAS DA STEAM ]\n")
         arq.write("\n".join(steam) + "\n\n")
-        arq.write("GRÁTIS NA EPIC GAMES\n")
+        arq.write("[ GRÁTIS NA EPIC GAMES ]\n")
         arq.write("\n".join(epic) + "\n\n")
-        arq.write("GOG PROMOÇÕES\n")
+        arq.write("[ GOG PROMOÇÕES ]\n")
         arq.write("https://www.gog.com/games?price=discounted&sort=popularity\n")
-    print(centralizar(f"Arquivo salvo: {nome}"))
+    print("\n" + espacamento(f"Arquivo salvo como: {nome}\n"))
 
 def menu():
     while True:
-        titulo("MENU DEALRECON")
-        print(centralizar("1 - Ver ofertas da Steam"))
-        print(centralizar("2 - Ver grátis na Epic"))
-        print(centralizar("3 - Gerar arquivo .txt"))
-        print(centralizar("4 - Sair"))
+        titulo("MENU")
+        print(espacamento("1 - Ver ofertas da Steam"))
+        print(espacamento("2 - Ver jogos grátis na Epic Games"))
+        print(espacamento("3 - Gerar arquivo com as ofertas"))
+        print(espacamento("4 - Sair"))
         op = input("\nEscolha uma opção: ")
 
         if op == "1":
@@ -94,10 +93,10 @@ def menu():
             epic = coletar_epic_games()
             gerar_txt(steam, epic)
         elif op == "4":
-            print(centralizar("Até logo!\n"))
+            print("\n" + espacamento("Encerrando o programa.") + "\n")
             break
         else:
-            print(centralizar("Opção inválida!"))
+            print(espacamento("Opção inválida."))
 
 if __name__ == "__main__":
     animacao_inicio()
