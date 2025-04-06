@@ -1,39 +1,31 @@
-# scraper_games.py
-# Desenvolvido por Ruše (@Natrona)
-# Projeto: DealRecon - Coleta de ofertas de jogos
+import requests
+from bs4 import BeautifulSoup
 
-import os
+def coletar_ofertas_steam():
+    url = 'https://store.steampowered.com/search/?specials=1'
+    headers = {
+        'User-Agent': 'Mozilla/5.0'
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
 
-# Cores ANSI
-def color(text, code): return f"\033[{code}m{text}\033[0m"
-green = lambda t: color(t, "92")
-yellow = lambda t: color(t, "93")
-cyan = lambda t: color(t, "96")
-bold = lambda t: color(t, "1")
+    ofertas = []
+    for item in soup.find_all('a', class_='search_result_row'):
+        titulo = item.find('span', class_='title').text
+        preco_antigo = item.find('strike').text if item.find('strike') else 'N/A'
+        preco_novo = item.find('div', class_='search_price').text.strip().split()[-1]
+        desconto = item.find('div', class_='search_discount').text.strip()
+        ofertas.append(f"{titulo} - {preco_antigo} -> {preco_novo} ({desconto})")
 
-def print_header(title):
-    print(bold("\n" + "=" * 40))
-    print(bold(f"{title.center(40)}"))
-    print(bold("=" * 40))
+    return ofertas
 
 def main():
-    os.system("clear")
-    print(bold(cyan("DEALRECON - PROMOÇÕES DE GAMES")))
-    print("-" * 40)
-
-    print_header("STEAM OFERTAS")
-    print(green("• ") + "Red Dead Redemption 2" + yellow("  R$299.90 ") + "→" + green(" R$74.97"))
-    print(green("• ") + "Sons Of The Forest" + yellow("       R$88.99 ") + "→" + green(" R$35.59"))
-    print(green("• ") + "Devil May Cry 5" + yellow("          R$99.00 ") + "→" + green(" R$24.75"))
-    print(green("• ") + "Devil May Cry HD Collection" + yellow(" R$99.00 ") + "→" + green(" R$32.67"))
-
-    print_header("EPIC GAMES GRÁTIS")
-    print(green("• ") + "LISA: Definitive Edition" + yellow(" - GRÁTIS"))
-    print(green("• ") + "Cat Quest II" + yellow("               - GRÁTIS"))
-
-    print_header("GOG PROMOÇÕES")
-    print("• Ver promoções direto no site:")
-    print(cyan("  https://www.gog.com/games?price=discounted&sort=popularity"))
+    print("=== OFERTAS ATUAIS DA STEAM ===")
+    ofertas = coletar_ofertas_steam()
+    with open('ofertas.txt', 'w', encoding='utf-8') as f:
+        for oferta in ofertas:
+            print(oferta)
+            f.write(oferta + '\n')
 
 if __name__ == "__main__":
     main()
