@@ -2,9 +2,6 @@
 # Desenvolvido por Ruše | github.com/Natrona/DealRecon
 
 import requests
-import json
-import time
-import sys
 from datetime import datetime
 
 def espacamento(texto, largura=60):
@@ -12,14 +9,6 @@ def espacamento(texto, largura=60):
 
 def titulo(texto):
     print("\n" + espacamento(f"[ {texto} ]") + "\n")
-
-def animacao_inicio():
-    texto = "Carregando DealRecon"
-    for i in range(4):
-        sys.stdout.write("\r" + espacamento(texto + "." * i))
-        sys.stdout.flush()
-        time.sleep(0.4)
-    print("\n" + espacamento("Bem-vindo ao DealRecon") + "\n")
 
 def coletar_ofertas_steam():
     titulo("OFERTAS DA STEAM")
@@ -64,23 +53,37 @@ def coletar_epic_games():
         print(espacamento(f"Erro ao acessar Epic: {e}"))
         return []
 
-def gerar_txt(steam, epic):
-    nome = f"ofertas_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
-    with open(nome, "w", encoding="utf-8") as arq:
+def gerar_arquivos(steam, epic):
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    txt_nome = f"ofertas_{timestamp}.txt"
+    html_nome = f"ofertas_{timestamp}.html"
+
+    with open(txt_nome, "w", encoding="utf-8") as arq:
         arq.write("[ OFERTAS DA STEAM ]\n")
         arq.write("\n".join(steam) + "\n\n")
         arq.write("[ GRÁTIS NA EPIC GAMES ]\n")
         arq.write("\n".join(epic) + "\n\n")
         arq.write("[ GOG PROMOÇÕES ]\n")
         arq.write("https://www.gog.com/games?price=discounted&sort=popularity\n")
-    print("\n" + espacamento(f"Arquivo salvo como: {nome}\n"))
+
+    with open(html_nome, "w", encoding="utf-8") as arq:
+        arq.write("<html><head><meta charset='utf-8'><title>Ofertas</title></head><body style='font-family:sans-serif;background:#111;color:#eee;padding:20px;'>")
+        arq.write("<h2>Ofertas da Steam</h2><ul>")
+        for item in steam: arq.write(f"<li>{item.replace('\n', '<br>')}</li>")
+        arq.write("</ul><h2>Grátis na Epic Games</h2><ul>")
+        for item in epic: arq.write(f"<li>{item}</li>")
+        arq.write("</ul><h2>GOG Promoções</h2>")
+        arq.write("<p><a href='https://www.gog.com/games?price=discounted&sort=popularity' style='color:#6cf;'>Clique aqui</a></p>")
+        arq.write("</body></html>")
+
+    print("\n" + espacamento(f"Arquivos salvos: {txt_nome}, {html_nome}\n"))
 
 def menu():
     while True:
         titulo("MENU")
         print(espacamento("1 - Ver ofertas da Steam"))
         print(espacamento("2 - Ver jogos grátis na Epic Games"))
-        print(espacamento("3 - Gerar arquivo com as ofertas"))
+        print(espacamento("3 - Gerar arquivos de ofertas"))
         print(espacamento("4 - Sair"))
         op = input("\nEscolha uma opção: ")
 
@@ -91,7 +94,7 @@ def menu():
         elif op == "3":
             steam = coletar_ofertas_steam()
             epic = coletar_epic_games()
-            gerar_txt(steam, epic)
+            gerar_arquivos(steam, epic)
         elif op == "4":
             print("\n" + espacamento("Encerrando o programa.") + "\n")
             break
@@ -99,5 +102,4 @@ def menu():
             print(espacamento("Opção inválida."))
 
 if __name__ == "__main__":
-    animacao_inicio()
     menu()
