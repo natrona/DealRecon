@@ -1,7 +1,7 @@
 # DealRecon - Scraper de Ofertas de Games   
 **por [Ruše] | GitHub: [Natrona](https://github.com/Natrona)**  
 
-![Banner](https://i.imgur.com/RFjzSxg.png)
+![Banner](https://cdn.cloudflare.steamstatic.com/store/home/store_home_share.jpg)
 
 ---
 
