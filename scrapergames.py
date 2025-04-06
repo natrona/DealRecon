@@ -10,11 +10,11 @@ def steamspy_ofertas():
         count = 0
         for appid in data:
             jogo = data[appid]
-            if jogo["initialprice"] > jogo["price"]:
+            preco_original = int(jogo["initialprice"])
+            preco_atual = int(jogo["price"])
+            if preco_original > preco_atual:
                 nome = jogo["name"]
-                preco_original = jogo["initialprice"] / 100
-                preco_atual = jogo["price"] / 100
-                print(f"{nome} - R${preco_original:.2f} -> R${preco_atual:.2f}")
+                print(f"{nome} - R${preco_original / 100:.2f} -> R${preco_atual / 100:.2f}")
                 count += 1
                 if count >= 5:
                     break
