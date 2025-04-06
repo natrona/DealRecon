@@ -1,9 +1,9 @@
 # DealRecon - Scraper de Ofertas de Games 🎮🔥  
 **por [Ruše] | GitHub: [Natrona](https://github.com/Natrona)**  
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg" width="120" height="120"> 
-<img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Epic_Games_logo.svg" width="120" height="120">
-<img src="https://upload.wikimedia.org/wikipedia/commons/2/29/GOG.com_Logo_2019.svg" width="120" height="120">
+![Steam Banner](https://i.imgur.com/RFjzSxg.png)  
+![Epic Games Banner](https://i.imgur.com/f3SbhKx.png)  
+![GOG Banner](https://i.imgur.com/Z7UUbGK.png)
 
 ---
 
